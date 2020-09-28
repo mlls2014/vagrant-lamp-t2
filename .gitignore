@@ -1,0 +1,10 @@
+# Ansible
+*.retry
+
+# Vagrant
+.vagrant/*
+
+# Otros
+*.log
+
+#source/*
