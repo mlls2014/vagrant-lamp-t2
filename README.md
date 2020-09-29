@@ -62,7 +62,7 @@ vagrant ssh
 
 El acceso con otros clientes como _winscp_ o _putty_ es posible utilizando el _usuario_: *vagrant* _contraseña_: *vagrant*.
 
-### Sobre la base de datos
+## Sobre la base de datos
 
 Para asegurar la instalación de MariaDB podemos ejecutar, la primera vez que entremos en la máquina virtual, el siguiente comando
 
@@ -72,7 +72,25 @@ sudo mysql_secure_installation
 
 De esta forma configuramos las claves necesarias para acceder a nuestra BD. En caso contrario el usuario _root_ no tendrá contraseña.
 
-### Sobre la depuración de código PHP. Instalación de XDebug
+Para gestionar la BD podemos usar HeidiSQL o similar desde nuestro anfitrión. El acceso desde host remoto a la BD ya está habilitado, pero sí debemos crear algún usuario que tenga privilegios para hacer ese acceso. Esto se puede hacer por medio del cliente _mysql_ ejecutado en la máquina virtual.
+
+```bash
+sudo mysql
+```
+
+Por ejemplo, para crear un usuario _root_ que pueda acceder desde cualquier host:
+
+```bash
+mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'tu_contrasena';
+```
+
+Y con este GRANT le damos todos los permisos a ese usuario:
+
+```bash
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+```
+
+## Sobre la depuración de código PHP. Instalación de XDebug
 
 El paquete _php-xdebug_ ya se encuentra instalado en nuestra máquina virtual y configurado para permitir la depuración en máquina remota (nuestro Windows anfitrión).
 

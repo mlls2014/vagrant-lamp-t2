@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Variables
+MYSQL_PASS=root
+
 # Modifica teclado y locale a ES
 apt-get update
 apt-get install -y locales  # install locales support
@@ -20,8 +23,8 @@ apt-get install -y apache2 apache2-utils
 #Instalamos MariaDB
 apt-get install -y mariadb-server mariadb-client
 
-#Para asegurar la instalación de MariaDB podemos ejecutar una vez creada la máquina y sólo la primera vez; crea claves y demás
-#sudo mysql_secure_installation
+#Para personalizar la configuración de MariaDB
+cp /vagrant/.provision/50-server.cnf /etc/mysql/mariadb.conf.d
 
 #Instalar php
 
@@ -38,7 +41,7 @@ a2enmod rewrite
 #a2enconf php7.4-fpm
 
 #Para personalizar la configuración de sitio por defecto en Apache
-cp /vagrant/.provision/000-default.conf /etc/apache2/sites-enabled/
+cp /vagrant/.provision/000-default.conf /etc/apache2/sites-enabled
 
 #Instalar composer, git, curl
 
@@ -68,4 +71,6 @@ if [ ! -L /var/www/html ]; then
     sudo chmod 755 /var/www/html
 fi
 
+
 systemctl restart apache2
+systemctl restart mysql

@@ -13,3 +13,15 @@
     }
     ]
     }
+
+
+/*
+// En keybindings.json para asignar teclas a la tareas
+[
+    {
+    "key": "ctrl+g",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Chrome"
+    }
+]
+*/
