@@ -64,31 +64,69 @@ El acceso con otros clientes como _winscp_ o _putty_ es posible utilizando el _u
 
 ## Sobre la base de datos
 
-Para asegurar la instalación de MariaDB podemos ejecutar, la primera vez que entremos en la máquina virtual, el siguiente comando
+Para asegurar la instalación de MariaDB debemos ejecutar, la primera vez que entremos en la máquina virtual, el siguiente comando
 
 ```bash
 sudo mysql_secure_installation
 ```
 
-De esta forma configuramos las claves necesarias para acceder a nuestra BD. En caso contrario el usuario _root_ no tendrá contraseña.
+Con esto, verá una serie de solicitudes mediante las cuales podrá realizar cambios en las opciones de seguridad de su instalación de MariaDB. En la primera solicitud se pedirá que introduzca la contraseña root de la base de datos actual. Debido a que no configuramos una aún, pulse ENTER para indicar “none” (ninguna).
 
-Para gestionar la BD podemos usar HeidiSQL o similar desde nuestro anfitrión. El acceso desde host remoto a la BD ya está habilitado, pero sí debemos crear algún usuario que tenga privilegios para hacer ese acceso. Esto se puede hacer por medio del cliente _mysql_ ejecutado en la máquina virtual.
+En la siguiente solicitud se pregunta si desea configurar una contraseña root de base de datos. En Ubuntu, la cuenta root para MariaDB está estrechamente vinculada al mantenimiento del sistema automatizado. Por lo tanto, no deberíamos cambiar los métodos de autenticación configurados para esa cuenta. Hacer esto permitiría que una actualización de paquetes dañara el sistema de bases de datos eliminando el acceso a la cuenta administrativa. Escriba N y pulse ENTER.
 
-```bash
-sudo mysql
-```
+Desde allí, puede pulsar Y y luego ENTER para aceptar los valores predeterminados para todas las preguntas siguientes. Con esto, se eliminarán algunos usuarios anónimos y la base de datos de prueba, se deshabilitarán las credenciales de inicio de sesión remoto de root y se cargarán estas nuevas reglas para que MariaDB aplique de inmediato los cambios que realizó.
 
-Por ejemplo, para crear un usuario _root_ que pueda acceder desde cualquier host:
+### Crear un usuario administrativo que emplea la autenticación por contraseña
 
-```bash
-mysql> CREATE USER 'root'@'%' IDENTIFIED BY 'tu_contrasena';
-```
+En los sistemas Ubuntu con MariaDB 10.03, el root user de MariaDB se configura para autenticar usando el complemento _unix_socket_ por defecto en vez de con una contraseña. Esto proporciona una mayor seguridad y utilidad en muchos casos, pero también puede generar complicaciones cuando necesita otorgar derechos administrativos a un programa externo (por ejemplo, phpMyAdmin).
 
-Y con este GRANT le damos todos los permisos a ese usuario:
+Debido a que el servidor utiliza la cuenta root para tareas como la rotación de registros y el inicio y la deteneción del servidor, es mejor no cambiar los detalles de autenticación root de la cuenta. La modificación de las credenciales del archivo de configuración en /etc/mysql/debian.cnf puede funcionar al principio, pero las actualizaciones de paquetes pueden sobrescribir esos cambios. En vez de modificar la cuenta root, los mantenedores de paquetes recomiendan crear una cuenta administrativa independiente para el acceso basado en contraseña.
+
+Para hacerlo, crearemos una nueva cuenta llamada admin con las mismas capacidades que la cuenta root, pero configurada para la autenticación por contraseña. Abra la línea de comandos de MariaDB desde su terminal:
 
 ```bash
-mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+sudo mariadb
 ```
+
+A continuación, cree un nuevo usuario con privilegios root y acceso basado en contraseña, que nos permita acceder a la base de datos desde cualquier host. Asegúrese de cambiar el nombre de usuario y la contraseña para que se adapten a sus preferencias:
+
+```bash
+MariaDB [(none)]> GRANT ALL ON *.* TO 'admin'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
+```
+
+Vacíe los privilegios para garantizar que se guarden y estén disponibles en la sesión actual:
+
+```bash
+MariaDB [(none)]> FLUSH PRIVILEGES;
+```
+
+Después de esto, cierre el shell de MariaDB:
+
+```bash
+MariaDB [(none)]> exit
+```
+
+Ahora podemos gestionar la BD desde el anfitrión con un programa tipo HeidiSQL o MySQL WorkBench. Utilizamos el usuario _admin_ creado más arriba.
+
+## Si queremos instalar phpmyadmin en la máquina
+
+Por simplicidad no hemos incluido la instalación desatentida de phpmyadmin en el script _bootstrap.sh_, por lo que esta instalación la tendremos que hacer de forma manual.
+
+Ejecutamos la instalación de phpmyadmin:
+
+```bash
+sudo apt install phpmyadmin
+```
+
+- Selecciomos el servidor web apache2
+
+- Configuramos la base de datos para phpmyadmin con dbconfig-common tal y como nos pide el asistente
+
+- Proporcionamos la contraseña para el usuario phpmyadmin
+
+Y ya podremos acceder a la interfaz web de phpmyadmin en la url http://192.168.250.254/phpmyadmin
+
+Deberíamos poder entrar con el usario _admin_ creado anteriormente.
 
 ## Sobre la depuración de código PHP. Instalación de XDebug
 
