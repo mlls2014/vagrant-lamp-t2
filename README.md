@@ -5,13 +5,13 @@ Entorno Vagrant LAMP para Desarrollo basado en Ubuntu Server 20.04 con Apache 2.
 Es una construcción pensada para desarrollar y aprender a programar en PHP y que no contempla requerimientos de seguridad como firewall, contraseñas de BD, etc.
 El script de provisionamiento se basa en muchos otros que ya existen en Internet, por lo que es mejorable. Para aprender a desarrollar en PHP durante la primera evaluación puede resultar válida.
 
-## Requisitos
+## Requisitos 📋
 
 - VirtualBox  <http://www.virtualbox.org>
 - Vagrant <http://www.vagrantup.com>
 - Git <http://git-scm.com/>
 
-## Qué está instalado
+## Qué está instalado 🚀
 
 - Ubuntu Server 20.04 LTS (box generic/ubuntu2004)
 - Apache 2.4 con mod rewrite enabled
@@ -43,7 +43,7 @@ El script de provisionamiento se basa en muchos otros que ya existen en Internet
 - php-opcache
 - php-fpm
 
-## Uso
+## Uso 🔧
 
 ```bash
 mkdir dirtrabajo
@@ -62,7 +62,7 @@ vagrant ssh
 
 El acceso con otros clientes como _winscp_ o _putty_ es posible utilizando el _usuario_: *vagrant* _contraseña_: *vagrant*.
 
-## Sobre la base de datos
+## Sobre la base de datos 📦
 
 Para asegurar la instalación de MariaDB debemos ejecutar, la primera vez que entremos en la máquina virtual, el siguiente comando
 
@@ -93,6 +93,8 @@ A continuación, cree un nuevo usuario con privilegios root y acceso basado en c
 ```bash
 MariaDB [(none)]> GRANT ALL ON *.* TO 'admin'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
 ```
+
+> Con el _%_ conseguimos que el usuario _admin_ pueda acceder con HeidiSQL desde la máquina anfitrión. Para acceder a la base de datos desde los scripts php o desde _phpmyadmin_ el % no sería necesario, se podría poner _localhost_.
 
 Vacíe los privilegios para garantizar que se guarden y estén disponibles en la sesión actual:
 
@@ -128,7 +130,7 @@ Y ya podremos acceder a la interfaz web de phpmyadmin en la url http://192.168.2
 
 Deberíamos poder entrar con el usario _admin_ creado anteriormente.
 
-## Sobre la depuración de código PHP. Instalación de XDebug
+## Sobre la depuración de código PHP. Instalación de XDebug 🛠️
 
 El paquete _php-xdebug_ ya se encuentra instalado en nuestra máquina virtual y configurado para permitir la depuración en máquina remota (nuestro Windows anfitrión).
 
@@ -158,7 +160,7 @@ xdebug.remote_autostart = 1
 
 Queda pendiente la configuración en el Entorno de Desarrollo Integrado (IDE) elegido para programar en PHP.
 
-## Depurar código PHP en IDE Visual Code
+## Depurar código PHP en IDE Visual Code 🛠️
 
 - El primer paso sería instalar la extensión _PHP Debug_ de Felix Becker.
 
@@ -180,7 +182,7 @@ En este ejemplo indicamos que el proyecto a depurar se encuentra en el servidor 
 
 - A continuación ponemos los puntos de interrupción deseados en el código php, pinchamos en _Run - Start Debugging F5_ y abrimos la página php en el navegador. La depuración debería comenzar.
 
-## Datos
+## Datos 📖
 
 - Dirección IP de la nueva máquina *192.168.250.254*
 - Document root es */vagrant/source*
@@ -189,7 +191,7 @@ En este ejemplo indicamos que el proyecto a depurar se encuentra en el servidor 
 - XDebug idekey = VCode
 - Puerto remoto para XDebug es 9000
 
-## Más datos
+## Más datos 📌
 
 Añade la siguiente línea a tu archivo hosts:
 
